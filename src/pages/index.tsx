@@ -1,7 +1,7 @@
 import { useUser } from "@clerk/nextjs";
 import { type NextPage } from "next";
 import Image from "next/image";
-import { Movie } from "typings";
+import { Movie, ResponseDataType } from "typings";
 import { api } from "~/utils/api";
 import fetchMultiple from "~/utils/request";
 import { requests } from "~/utils/request";
@@ -47,17 +47,17 @@ const Home: NextPage<HomePageProps> = ({
 };
 
 export const getServerSideProps = async () => {
-  const categories = await fetchMultiple(requests);
+  const categories: ResponseDataType[] = await fetchMultiple(requests);
 
   const [
-    { results: trendingNow },
-    { results: topRated },
-    { results: actionMovies },
-    { results: comedyMovies },
-    { results: horrorMovies },
-    { results: romanceMovies },
-    { results: documentaries },
-  ] = categories;
+    { results: trendingNow } = { results: [] },
+    { results: topRated } = { results: [] },
+    { results: actionMovies } = { results: [] },
+    { results: comedyMovies } = { results: [] },
+    { results: horrorMovies } = { results: [] },
+    { results: romanceMovies } = { results: [] },
+    { results: documentaries } = { results: [] },
+  ] = categories || [];
 
   return {
     props: {

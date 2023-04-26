@@ -1,3 +1,5 @@
+import { ResponseDataType } from "typings";
+
 const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
 const BASE_URL = "https://api.themoviedb.org/3";
 
@@ -36,11 +38,15 @@ export const requests = [
   },
 ];
 
-const fetchMultiple = async (requests: Array<RequestType>) => {
+const fetchMultiple = async (
+  requests: Array<RequestType>
+): Promise<Array<ResponseDataType>> => {
   const responses = await Promise.all(
     requests.map((request) => fetch(request.url).then((res) => res.json()))
   );
-  return responses;
+  return responses.filter(
+    (response) => response !== undefined
+  ) as ResponseDataType[];
 };
 
 export default fetchMultiple;
