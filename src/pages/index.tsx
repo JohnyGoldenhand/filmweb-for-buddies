@@ -30,7 +30,7 @@ const Home: NextPage<HomePageProps> = ({
     <main>
       <section>
         {trendingNow.map((movie) => (
-          <div>
+          <div key={movie.id}>
             <Image
               src={`https://image.tmdb.org/t/p/w500${
                 movie.backdrop_path || movie.poster_path
