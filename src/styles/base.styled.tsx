@@ -5,3 +5,8 @@ export const Button = styled.button`
   background-color: transparent;
   color: white;
 `;
+
+export const CenteredSection = styled.div`
+  display: flex;
+  align-items: center;
+`;

@@ -19,7 +19,7 @@ const config = {
     defaultLocale: "en",
   },
   images: {
-    domains: ["images.clerk.dev"],
+    domains: ["images.clerk.dev", "image.tmdb.org"],
   },
 };
 export default config;
