@@ -21,5 +21,8 @@ const config = {
   images: {
     domains: ["images.clerk.dev", "image.tmdb.org"],
   },
+  compiler: {
+    styledComponents: true,
+  },
 };
 export default config;

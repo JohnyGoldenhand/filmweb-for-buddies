@@ -1,7 +1,11 @@
 const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
 const BASE_URL = "https://api.themoviedb.org/3";
 
-const requests = [
+interface RequestType {
+  url: string;
+}
+
+export const requests = [
   {
     key: "fetchTrending",
     url: `${BASE_URL}/trending/all/week?api_key=${API_KEY}&language=en-US`,
@@ -32,4 +36,11 @@ const requests = [
   },
 ];
 
-export default requests;
+const fetchMultiple = async (requests: Array<RequestType>) => {
+  const responses = await Promise.all(
+    requests.map((request) => fetch(request.url).then((res) => res.json()))
+  );
+  return responses;
+};
+
+export default fetchMultiple;

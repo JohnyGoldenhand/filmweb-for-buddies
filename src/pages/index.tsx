@@ -1,18 +1,18 @@
 import { useUser } from "@clerk/nextjs";
 import { type NextPage } from "next";
 import Image from "next/image";
-import { Movie, ResponseDataType } from "typings";
+import { Movie } from "typings";
 import { api } from "~/utils/api";
-import requests from "~/utils/request";
-
+import fetchMultiple from "~/utils/request";
+import { requests } from "~/utils/request";
 interface HomePageProps {
-  trendingNow: ResponseDataType;
-  topRated: ResponseDataType;
-  actionMovies: ResponseDataType;
-  comedyMovies: ResponseDataType;
-  horrorMovies: ResponseDataType;
-  romanceMovies: ResponseDataType;
-  documentaries: ResponseDataType;
+  trendingNow: Array<Movie>;
+  topRated: Array<Movie>;
+  actionMovies: Array<Movie>;
+  comedyMovies: Array<Movie>;
+  horrorMovies: Array<Movie>;
+  romanceMovies: Array<Movie>;
+  documentaries: Array<Movie>;
 }
 
 const Home: NextPage<HomePageProps> = ({
@@ -29,7 +29,7 @@ const Home: NextPage<HomePageProps> = ({
   return (
     <main>
       <section>
-        {trendingNow.results.map((movie) => (
+        {trendingNow.map((movie) => (
           <div>
             <Image
               src={`https://image.tmdb.org/t/p/w500${
@@ -46,28 +46,17 @@ const Home: NextPage<HomePageProps> = ({
   );
 };
 
-interface RequestType {
-  url: string;
-}
-
-const fetchMultiple = async (requests: RequestType[]) => {
-  const responses = await Promise.all(
-    requests.map((request) => fetch(request.url).then((res) => res.json()))
-  );
-  return responses;
-};
-
 export const getServerSideProps = async () => {
   const categories = await fetchMultiple(requests);
 
   const [
-    trendingNow,
-    topRated,
-    actionMovies,
-    comedyMovies,
-    horrorMovies,
-    romanceMovies,
-    documentaries,
+    { results: trendingNow },
+    { results: topRated },
+    { results: actionMovies },
+    { results: comedyMovies },
+    { results: horrorMovies },
+    { results: romanceMovies },
+    { results: documentaries },
   ] = categories;
 
   return {
