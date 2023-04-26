@@ -41,12 +41,11 @@ export const requests = [
 const fetchMultiple = async (
   requests: Array<RequestType>
 ): Promise<Array<ResponseDataType>> => {
-  const responses = await Promise.all(
+  if (!API_KEY) throw new Error("No Api Key");
+  const responses = (await Promise.all(
     requests.map((request) => fetch(request.url).then((res) => res.json()))
-  );
-  return responses.filter(
-    (response) => response !== undefined
-  ) as ResponseDataType[];
+  )) as ResponseDataType[];
+  return responses;
 };
 
 export default fetchMultiple;
