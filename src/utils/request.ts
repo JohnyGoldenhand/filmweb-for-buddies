@@ -7,6 +7,8 @@ interface RequestType {
   url: string;
 }
 
+if (!API_KEY) throw new Error("No api key");
+
 export const requests = [
   {
     key: "fetchTrending",
