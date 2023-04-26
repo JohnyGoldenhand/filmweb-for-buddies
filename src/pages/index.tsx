@@ -1,10 +1,8 @@
 import { useUser } from "@clerk/nextjs";
 import { type NextPage } from "next";
 import Image from "next/image";
-import { Movie, ResponseDataType } from "typings";
-import { api } from "~/utils/api";
-import fetchMultiple from "~/utils/request";
-import { requests } from "~/utils/request";
+import { Movie } from "typings";
+import requests from "~/utils/request";
 interface HomePageProps {
   trendingNow: Array<Movie>;
   topRated: Array<Movie>;
@@ -47,27 +45,33 @@ const Home: NextPage<HomePageProps> = ({
 };
 
 export const getServerSideProps = async () => {
-  const categories: ResponseDataType[] = await fetchMultiple(requests);
-
   const [
-    { results: trendingNow } = { results: [] },
-    { results: topRated } = { results: [] },
-    { results: actionMovies } = { results: [] },
-    { results: comedyMovies } = { results: [] },
-    { results: horrorMovies } = { results: [] },
-    { results: romanceMovies } = { results: [] },
-    { results: documentaries } = { results: [] },
-  ] = categories || [];
+    trendingNow,
+    topRated,
+    actionMovies,
+    comedyMovies,
+    horrorMovies,
+    romanceMovies,
+    documentaries,
+  ] = await Promise.all([
+    fetch(requests.fetchTrending).then((res) => res.json()),
+    fetch(requests.fetchTopRated).then((res) => res.json()),
+    fetch(requests.fetchActionMovies).then((res) => res.json()),
+    fetch(requests.fetchComedyMovies).then((res) => res.json()),
+    fetch(requests.fetchHorrorMovies).then((res) => res.json()),
+    fetch(requests.fetchRomanceMovies).then((res) => res.json()),
+    fetch(requests.fetchDocumentaries).then((res) => res.json()),
+  ]);
 
   return {
     props: {
-      trendingNow,
-      topRated,
-      actionMovies,
-      comedyMovies,
-      horrorMovies,
-      romanceMovies,
-      documentaries,
+      trendingNow: trendingNow.results,
+      topRated: topRated.results,
+      actionMovies: actionMovies.results,
+      comedyMovies: comedyMovies.results,
+      horrorMovies: horrorMovies.results,
+      romanceMovies: romanceMovies.results,
+      documentaries: documentaries.results,
     },
   };
 };
