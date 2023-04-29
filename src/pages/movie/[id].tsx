@@ -38,7 +38,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   if (!API_KEY) throw new Error("no key");
 
   const { id } = params as MoviePageProps;
-  const movieDetails = await fetch(`    
+  const movieDetails: MovieDetailsType = await fetch(`    
     https://api.themoviedb.org/3/movie/${id}?api_key=${API_KEY}&language=en-US`).then(
     (res) => res.json()
   );

@@ -6,6 +6,13 @@ import requests from "~/utils/request";
 import { useState } from "react";
 import { CategoriesRow } from "components/CategoriesRow/component";
 import { PageContent } from "~/styles/Home.styled";
+
+interface ApiResponseType {
+  page: number;
+  results: Array<Movie>;
+  total_results: number;
+  total_pages: number;
+}
 interface HomePageProps {
   trendingNow: Array<Movie>;
   topRated: Array<Movie>;
@@ -28,11 +35,9 @@ const Home: NextPage<HomePageProps> = ({
   const { user } = useUser();
   const [seatchQuery, setSearchQuery] = useState<string>("");
 
-  const onSeatchSubmit = () => {};
-
   return (
     <PageContent>
-      <form onSubmit={onSeatchSubmit}>
+      <form>
         <input
           type="text"
           placeholder="Search a movie"
@@ -75,7 +80,7 @@ export const getServerSideProps = async () => {
     horrorMovies,
     romanceMovies,
     documentaries,
-  ] = await Promise.all([
+  ]: Array<ApiResponseType> = await Promise.all([
     fetch(requests.fetchTrending).then((res) => res.json()),
     fetch(requests.fetchTopRated).then((res) => res.json()),
     fetch(requests.fetchActionMovies).then((res) => res.json()),
@@ -87,13 +92,13 @@ export const getServerSideProps = async () => {
 
   return {
     props: {
-      trendingNow: trendingNow.results,
-      topRated: topRated.results,
-      actionMovies: actionMovies.results,
-      comedyMovies: comedyMovies.results,
-      horrorMovies: horrorMovies.results,
-      romanceMovies: romanceMovies.results,
-      documentaries: documentaries.results,
+      trendingNow: trendingNow?.results,
+      topRated: topRated?.results,
+      actionMovies: actionMovies?.results,
+      comedyMovies: comedyMovies?.results,
+      horrorMovies: horrorMovies?.results,
+      romanceMovies: romanceMovies?.results,
+      documentaries: documentaries?.results,
     },
   };
 };
