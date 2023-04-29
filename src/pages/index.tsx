@@ -3,6 +3,9 @@ import { type NextPage } from "next";
 import Image from "next/image";
 import { Movie } from "typings";
 import requests from "~/utils/request";
+import { useState } from "react";
+import { CategoriesRow } from "components/CategoriesRow/component";
+import { PageContent } from "~/styles/Home.styled";
 interface HomePageProps {
   trendingNow: Array<Movie>;
   topRated: Array<Movie>;
@@ -23,24 +26,43 @@ const Home: NextPage<HomePageProps> = ({
   documentaries,
 }) => {
   const { user } = useUser();
+  const [seatchQuery, setSearchQuery] = useState<string>("");
+
+  const onSeatchSubmit = () => {};
 
   return (
-    <main>
+    <PageContent>
+      <form onSubmit={onSeatchSubmit}>
+        <input
+          type="text"
+          placeholder="Search a movie"
+          value={seatchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+        <button type="submit">Search</button>
+      </form>
       <section>
-        {trendingNow.map((movie) => (
-          <div key={movie.id}>
-            <Image
-              src={`https://image.tmdb.org/t/p/w500${
-                movie.backdrop_path || movie.poster_path
-              }`}
-              alt="poster"
-              width={40}
-              height={80}
-            />
-          </div>
-        ))}
+        <CategoriesRow
+          categoryName="Trending now"
+          movies={trendingNow}
+          size={300}
+        />
+        <CategoriesRow categoryName="Top rated" movies={topRated} size={300} />
+        <CategoriesRow categoryName="Action" movies={actionMovies} size={300} />
+        <CategoriesRow categoryName="Comedy" movies={comedyMovies} size={300} />
+        <CategoriesRow categoryName="Horror" movies={horrorMovies} size={300} />
+        <CategoriesRow
+          categoryName="Romance"
+          movies={romanceMovies}
+          size={300}
+        />
+        <CategoriesRow
+          categoryName="Documentaries"
+          movies={documentaries}
+          size={300}
+        />
       </section>
-    </main>
+    </PageContent>
   );
 };
 
