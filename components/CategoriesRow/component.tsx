@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { FC } from "react";
-import { Movie } from "typings";
+import type { Movie } from "typings";
 import { StyledRow } from "./component.styled";
 import Link from "next/link";
 
