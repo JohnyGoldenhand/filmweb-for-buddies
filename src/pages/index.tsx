@@ -6,6 +6,7 @@ import requests from "~/utils/request";
 import { useState } from "react";
 import { CategoriesRow } from "components/CategoriesRow/component";
 import { PageContent } from "~/styles/Home.styled";
+import { VALID_API_KEY } from "~/utils/request";
 
 interface ApiResponseType {
   page: number;
@@ -33,40 +34,78 @@ const Home: NextPage<HomePageProps> = ({
   documentaries,
 }) => {
   const { user } = useUser();
-  const [seatchQuery, setSearchQuery] = useState<string>("");
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [searchedMovies, setSearchedMovies] = useState<null | Movie[]>(null);
+  const handleSearch = async (query: string) => {
+    const searchResponse: ApiResponseType = await fetch(
+      `https://api.themoviedb.org/3/search/movie?api_key=${VALID_API_KEY}&query=${query}`
+    ).then((res) => res.json());
+    setSearchedMovies(searchResponse.results);
+  };
 
   return (
     <PageContent>
-      <form>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleSearch(searchQuery);
+        }}
+      >
         <input
           type="text"
           placeholder="Search a movie"
-          value={seatchQuery}
+          value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
         <button type="submit">Search</button>
       </form>
-      <section>
-        <CategoriesRow
-          categoryName="Trending now"
-          movies={trendingNow}
-          size={300}
-        />
-        <CategoriesRow categoryName="Top rated" movies={topRated} size={300} />
-        <CategoriesRow categoryName="Action" movies={actionMovies} size={300} />
-        <CategoriesRow categoryName="Comedy" movies={comedyMovies} size={300} />
-        <CategoriesRow categoryName="Horror" movies={horrorMovies} size={300} />
-        <CategoriesRow
-          categoryName="Romance"
-          movies={romanceMovies}
-          size={300}
-        />
-        <CategoriesRow
-          categoryName="Documentaries"
-          movies={documentaries}
-          size={300}
-        />
-      </section>
+      <main>
+        {searchedMovies ? (
+          <CategoriesRow
+            categoryName={searchQuery}
+            movies={searchedMovies}
+            size={300}
+          />
+        ) : (
+          <section>
+            <CategoriesRow
+              categoryName="Trending now"
+              movies={trendingNow}
+              size={300}
+            />
+            <CategoriesRow
+              categoryName="Top rated"
+              movies={topRated}
+              size={300}
+            />
+            <CategoriesRow
+              categoryName="Action"
+              movies={actionMovies}
+              size={300}
+            />
+            <CategoriesRow
+              categoryName="Comedy"
+              movies={comedyMovies}
+              size={300}
+            />
+            <CategoriesRow
+              categoryName="Horror"
+              movies={horrorMovies}
+              size={300}
+            />
+            <CategoriesRow
+              categoryName="Romance"
+              movies={romanceMovies}
+              size={300}
+            />
+            <CategoriesRow
+              categoryName="Documentaries"
+              movies={documentaries}
+              size={300}
+            />
+          </section>
+        )}
+      </main>
     </PageContent>
   );
 };
