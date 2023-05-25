@@ -1,6 +1,5 @@
 import { useUser } from "@clerk/nextjs";
 import { type NextPage } from "next";
-import Image from "next/image";
 import { Movie } from "typings";
 import requests from "~/utils/request";
 import { useState } from "react";

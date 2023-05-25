@@ -17,4 +17,16 @@ model MovieList {
       id          String   @id @default(cuid())
       title       String
       posterPath  String
+      ratings     MovieRating[]
+
+}
+
+
+model MovieRating {
+  id        String        @id @default(cuid())
+  rating    Int           @default(0)
+  movie     MovieList     @relation(fields: [movieId], references: [id])
+  movieId   String        
+
+  @@index([movieId])
 }
